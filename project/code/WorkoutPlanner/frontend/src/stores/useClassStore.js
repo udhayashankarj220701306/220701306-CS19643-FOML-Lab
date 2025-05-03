@@ -3,24 +3,25 @@ import axios from '../libs/axios.js';
 import {toast} from 'react-hot-toast';
 import { updateCompleteWorkout } from '../../../backend/controllers/completeworkout.controller.js';
 
+
 export const useClassStore = create((set,get) => ({ 
     // : null,
     completeWorkout:null,
     id: null,
     loading: false,
-    date:new Date(),
+    day:null,
     dates:[],
 
     getUserDateCompleteWorkout: async ({user}) => {
         set({loading: true});
-        console.log("useClassStore:getUserDateCompleteWorkout:",user,get().date);
+        console.log("useClassStore:getUserDateCompleteWorkout:",user,get().day);
 
         try {
             const {data } = await axios.get("/completeWorkout/date/"+user._id, {
-                params: { date: get().date }
+                params: { day: get().day }
               });
             set({id:data._id});
-            set({completeWorkout:data[0].classes,loading: false});
+            set({completeWorkout:data.classes,loading: false});
             toast.success('Complete Workout Fetched successfully');
         } catch (error) {
             toast.error(error.response.data.message);
@@ -40,8 +41,9 @@ export const useClassStore = create((set,get) => ({
             set({loading: false});
         }
     },
-    changeDate: async ({day}) => {
-        set({date:day});
+    changeDay: async ({daay}) => {
+        console.log("useClassStore:changeDay:",daay);
+        set({day:daay});
     },
     generateSevenDays: async ({formData}) => {
         set({loading: true});

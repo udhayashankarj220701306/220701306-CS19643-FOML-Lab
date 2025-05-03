@@ -4,20 +4,31 @@ import { useUserStore } from "../stores/useUserStore.js";
 
 const Test = () => {
 const getUserDateCompleteWorkout = useClassStore((state) => state.getUserDateCompleteWorkout);
-const date = useClassStore((state) => state.date);
+
 const completeWorkout = useClassStore((state) => state.completeWorkout);
 const updateClass = useClassStore((state) => state.updateClass);
+const changeDay = useClassStore((state) => state.changeDay);
   const { user } = useUserStore();
-
+  const day = useClassStore((state) => state.day);
   const [sad, setSad] = useState([]);
   const [data, setData] = useState([]); // new state to store user editable weights/reps
 
   // Fetch workouts
   useEffect(() => {
+    console.log("once");
+    // if (user  && !localStorage.getItem("workout_day_set")) {
+      const calculatedDay = Math.ceil(
+        (new Date().getTime() - new Date(user.startDate).getTime()) / (1000 * 60 * 60 * 24)
+      );
+      changeDay({ daay: calculatedDay });
+      // localStorage.setItem("workout_day_set", "true");
+    // }
+  }, []);
+  useEffect(() => {
     if (user) {
       getUserDateCompleteWorkout({ user});
     }
-  }, [getUserDateCompleteWorkout, user,date]);
+  }, [getUserDateCompleteWorkout,day]);
 
   // Set sad and initialize data for inputs
   useEffect(() => {

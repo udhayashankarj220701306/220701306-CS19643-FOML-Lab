@@ -3,7 +3,6 @@ import { useUserStore } from "../stores/useUserStore.js";
 
 const Profile = () => {
     const { user, updateUserData } = useUserStore();
-    const { generateSevenDays } = useUserStore();
     
     const [formData, setFormData] = useState({
         height: user.height || "",
@@ -36,7 +35,6 @@ const Profile = () => {
         e.preventDefault();
         // Call the updateUserData function from the store to update the data
         updateUserData(formData);
-        generateSevenDays(formData);
 
     };
 
