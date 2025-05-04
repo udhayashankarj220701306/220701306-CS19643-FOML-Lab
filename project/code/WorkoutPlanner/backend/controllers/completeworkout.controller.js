@@ -43,16 +43,16 @@ export const showUserCompleteWorkouts = async (req, res) => {
 
 export const showUserDayCompleteWorkouts = async (req, res) => {
     try {
+      // await CompleteWorkout.collection.drop();
         console.log(req.params.id,req.query.day);
         const query = { userId: req.params.id };
         const day = req.query.day;
         query.day = day
-        
 
         const completeWorkouts = await CompleteWorkout.findOne(query);
 
         
-        console.log(completeWorkouts);
+        console.log("show",req.user);
         if(completeWorkouts){
           res.status(200).json(completeWorkouts); // <- small fix: respond with populatedClasses!
         }
@@ -64,6 +64,14 @@ export const showUserDayCompleteWorkouts = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }   
+};
+export const drop = async (req, res) => {
+  try {
+    await CompleteWorkout.collection.drop();
+    res.status(201).json({message:"drop success"});
+  } catch (error) {
+      res.status(500).json({ message: "Server error", error: error.message });
+  }   
 };
 
 
@@ -89,11 +97,13 @@ export const updateCompleteWorkout = async (req, res) => {
     }
 }
 
-const generateSevenDaysWorkouts = async () => {
+const generateSevenDaysWorkouts = async (user) => {
+  const completeWorkouts = await CompleteWorkout.find({userId: user._id});
+  console.log("udhaya",user,completeWorkouts);
   const workoutPlans = [
     {
       userId: "68167e9399a0e50951107e24",
-      day: 1,
+      day: 8,
       classes: [
         {
           equipmentName: "Dumbbell",
