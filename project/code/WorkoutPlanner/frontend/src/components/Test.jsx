@@ -8,6 +8,7 @@ const getUserDateCompleteWorkout = useClassStore((state) => state.getUserDateCom
 const completeWorkout = useClassStore((state) => state.completeWorkout);
 const updateClass = useClassStore((state) => state.updateClass);
 const changeDay = useClassStore((state) => state.changeDay);
+const id = useClassStore((state)=> state.id);
   const { user } = useUserStore();
   const day = useClassStore((state) => state.day);
   const [sad, setSad] = useState([]);
@@ -36,6 +37,11 @@ const changeDay = useClassStore((state) => state.changeDay);
       setSad(completeWorkout);
 
       const initialData = completeWorkout.map(item => ({
+        equipmentName:item.equipmentName,
+        workoutName:item.workoutName,
+        noOfSets:item.noOfSets,
+        givenReps:item.givenReps,
+        givenWeights:item.givenWeights,
         doneWeights: item.givenWeights.map((j,i) => item.doneWeights[i] || 0),
         doneReps: item.givenReps.map((j,i) => item.doneReps[i] || 0),
       }));
@@ -49,6 +55,7 @@ const changeDay = useClassStore((state) => state.changeDay);
 
   return (
     <>
+      <h1 className="text-2xl font-bold m-2">Day: {day}</h1>
       <div className="flex flex-col items-center min-w-fit w-fit bg-gray-900 rounded-lg p-2 gap-2 m-2">
         {sad.map((sd, index) => (
           <div key={index} className="flex flex-col items-center gap-1 bg-gray-200 rounded-lg p-1">
@@ -68,10 +75,10 @@ const changeDay = useClassStore((state) => state.changeDay);
                         value={data[index]?.doneWeights[setIndex] ?? 0}
                         onChange={(e) => {
                           const newData = [...data];
-                          newData[index].doneWeights[setIndex] = parseInt(e.target.value) || 0;
-                          console.log(parseInt(e.target.value));
+                          newData[index].doneWeights[setIndex] = parseFloat(e.target.value) || 0;
+                          
                           setData(newData);
-                          updateClass({id:sd._id, clas:newData[index]});
+                          updateClass({id:sad._id, clas:newData});
                         }}
                         className="bg-black w-14 text-center text-white rounded-lg m-1"
                       />
@@ -85,7 +92,7 @@ const changeDay = useClassStore((state) => state.changeDay);
                           const newData = [...data];
                           newData[index].doneReps[setIndex] = parseInt(e.target.value) || 0;
                           setData(newData);
-                          updateClass({id:sd._id, clas:newData[index]});
+                          updateClass({id:sad._id, clas:newData});
                         }}
                         className="bg-black w-14 text-center text-white rounded-lg m-1"
                       />

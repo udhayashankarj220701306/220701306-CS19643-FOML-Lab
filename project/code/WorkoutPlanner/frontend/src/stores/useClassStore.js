@@ -1,7 +1,6 @@
 import {create} from 'zustand';
 import axios from '../libs/axios.js';
 import {toast} from 'react-hot-toast';
-import { updateCompleteWorkout } from '../../../backend/controllers/completeworkout.controller.js';
 
 
 export const useClassStore = create((set,get) => ({ 
@@ -21,6 +20,7 @@ export const useClassStore = create((set,get) => ({
                 params: { day: get().day }
               });
             set({id:data._id});
+            console.log(typeof data._id);
             set({completeWorkout:data.classes,loading: false});
             toast.success('Complete Workout Fetched successfully');
         } catch (error) {
@@ -30,10 +30,11 @@ export const useClassStore = create((set,get) => ({
     },
     updateClass: async ({id,clas}) => {
         set({loading: true});
-        console.log("useClassStore:updateClass :",id,clas);
+        // console.log("useClassStore:updateClass :",id,clas);
 
         try {
-            const {data } = await axios.patch("/class/"+id,clas);
+            const Class = {_id:get().id,classes:clas};
+            const {data } = await axios.patch("/completeWorkout/"+get().id,Class);
             set({loading: false});
             toast.success('class updated successfully');
         } catch (error) {
@@ -58,4 +59,4 @@ export const useClassStore = create((set,get) => ({
         //     set({loading: false});
         // }
     },
-})); 
+}));
